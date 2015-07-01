@@ -52,14 +52,6 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 export PATH="/usr/local/bin:/usr/local/lib:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-export GOPATH="$HOME/gopath"
-export PATH="$GOPATH/bin:$PATH"
-export ASDKPATH="/Users/seke/code/android-sdk-macosx"
-export PATH="$ASDKPATH:$PATH"
-export VIRTUALENVWRAPPER_PYTHON=$(brew --prefix)/bin/python
- if [ -f $(brew --prefix)/bin/virtualenvwrapper_lazy.sh ]; then
-   . $(brew --prefix)/bin/virtualenvwrapper_lazy.sh
- fi
 
 function pr () {
   repo=`git remote -v | grep -m 1 "(push)" | sed -e "s/.*github.com[:/]\(.*\)\.git.*/\1/"`
@@ -72,10 +64,6 @@ function pr () {
 # NVM
 source $(brew --prefix nvm)/nvm.sh
 export NVM_DIR=~/.nvm
-#SPM
-alias spm="npm -reg http://npm-registry.spotify.net -userconfig ~/.spmrc"
-# export MANPATH="/usr/local/man:$MANPATH"
-
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -110,32 +98,7 @@ alias love="/Applications/love.app/Contents/MacOS/love"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 export EDITOR='vim'
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-function puclient() {
-        export SERVER=awseu3-productusertesting-b1.shared.cloud.spotify.net
-        export PORT=6101
-        export ADDR=/RPC2
-        if [[ -n $1 ]]; then SERVER=$1; fi
-        if [[ -n $2 ]]; then PORT=$2; fi
-        if [[ -n $3 ]]; then ADDR=$3; fi
-        python -ic "import xmlrpclib; from pprint import pprint as pp; pu = xmlrpclib.ServerProxy('http://$SERVER:$PORT$ADDR', allow_none=True);  d = xmlrpclib.ServerProxy('http://$SERVER:5120', allow_none=True); api = xmlrpclib.ServerProxy('http://$SERVER:6100', allow_none=True); co = xmlrpclib.ServerProxy('http://$SERVER:5220', allow_none=True); print pu; print d; print api; print co"
-}
-function pulocal() {
-        export SERVER=localhost
-        export PORT=5101
-        export ADDR=/RPC2
-        if [[ -n $1 ]]; then SERVER=$1; fi
-        if [[ -n $2 ]]; then PORT=$2; fi
-        if [[ -n $3 ]]; then ADDR=$3; fi
-        python -ic "import xmlrpclib; from pprint import pprint as pp; pu = xmlrpclib.ServerProxy('http://$SERVER:$PORT$ADDR', allow_none=True);  d = xmlrpclib.ServerProxy('http://$SERVER:5120', allow_none=True); api = xmlrpclib.ServerProxy('http://$SERVER:5180', allow_none=True); co = xmlrpclib.ServerProxy('http://$SERVER:5220', allow_none=True); print pu; print d; print api; print co"
-}
 function note() {
   touch ~/Documents/Notes/$1.md
-  atom ~/Documents/Notes/$1.md
+  vi ~/Documents/Notes/$1.md
 }
-source ~/.bin/tmuxinator.zsh
-if [ -f /usr/local/bin/virtualenvwrapper_lazy.sh ]; then
-  . /usr/local/bin/virtualenvwrapper_lazy.sh
-  workon spotify
-fi
