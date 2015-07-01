@@ -20,8 +20,7 @@ task :install do
   file_operation(Dir.glob('irb/*')) if want_to_install?('irb config')
 
   if want_to_install?('vim configuration (highly recommended)')
-      run %{ git clone git://github.com/amix/vimrc.git ~/.vim_runtime && sh ~/.vim_runtime/install_awesome_vimrc.sh }
-      file_operation(Dir.glob('vim/*'), :symlink, "$HOME/.vim_runtime/#{file}")
+    install_awsome_vim
   end
 
   install_fonts
@@ -38,7 +37,14 @@ def run(cmd)
   puts "[Running] #{cmd}"
   `#{cmd}` unless ENV['DEBUG']
 end
+def install_awsome_vim
+  puts "======================================================"
+  puts "Installing Awsome vim"
+  puts "======================================================"
 
+  run %{ git clone git://github.com/amix/vimrc.git ~/.vim_runtime && sh ~/.vim_runtime/install_awesome_vimrc.sh }
+  file_operation(Dir.glob('vim/*'), :symlink, "$HOME/.vim_runtime/#{file}")
+end
 def install_rvm
   puts "======================================================"
   puts "Installing RVM Bundler support. Never have to type"
@@ -62,11 +68,13 @@ end
 def install_homebrew
   run %{which brew}
   unless $?.success?
-    puts "======================================================"
-    puts "Installing Homebrew, the OSX package manager...If it's"
-    puts "already installed, this will do nothing."
-    puts "======================================================"
-    run %{ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"}
+  puts "======================================================"
+  puts "Installing Homebrew, the OSX package manager...If it's"
+  puts "already installed, this will do nothing."
+  puts "======================================================"
+  run %{ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"}
+  puts
+  puts
   end
 
   puts
@@ -80,7 +88,7 @@ def install_homebrew
   puts "======================================================"
   puts "Installing Homebrew packages and Cask"
   puts "======================================================"
-  run %{ brew install zsh git hub tmux reattach-to-user-namespace the_silver_searcher caskroom/cask/brew-cask }
+  run %{ brew install nvm zsh git hub tmux the_silver_searcher caskroom/cask/brew-cask }
   run %{ brew install macvim --env-std --override-system-vim }
   run %{ brew cask update }
   run %{ brew cask install iterm2 }
@@ -166,12 +174,13 @@ def ask(message, values)
 end
 
 def install_oh_my_zsh
-    puts "======================================================"
-    puts "Installing Oh my zsh and making zsh default shell"
-    puts "======================================================"
-
-    run %{ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" }
-    run %{ git clone git://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting }
+  puts "======================================================"
+  puts "Installing Oh my zsh and making zsh default shell"
+  puts "======================================================"
+  run %{ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" }
+  run %{ git clone git://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting }
+  puts
+  puts
 end
 
 
