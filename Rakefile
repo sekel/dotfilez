@@ -170,7 +170,7 @@ def install_oh_my_zsh
     puts "Installing Oh my zsh and making zsh default shell"
     puts "======================================================"
 
-    run %{ curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh }
+    run %{ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" }
     run %{ git clone git://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins }
     puts "Setting zsh as your default shell"
     if File.exists?("/usr/local/bin/zsh")
