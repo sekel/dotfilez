@@ -12,10 +12,12 @@ task :install do
   install_homebrew if RUBY_PLATFORM.downcase.include?("darwin")
   install_rvm
   install_rvm_binstubs
+  install_oh_my_zsh
 
   # This has all the runcoms from this directory.
-  file_operation(Dir.glob('ag/*')) if want_to_install?('Silver Searcher')
-  file_operation(Dir.glob('irb/*')) if want_to_install?('irb')
+  file_operation(Dir.glob('zsh/*')) if want_to_install?('Zsh config')
+  file_operation(Dir.glob('ag/*')) if want_to_install?('Silver Searcher ignore')
+  file_operation(Dir.glob('irb/*')) if want_to_install?('irb config')
 
   if want_to_install?('vim configuration (highly recommended)')
       run %{ git clone git://github.com/amix/vimrc.git ~/.vim_runtime && sh ~/.vim_runtime/install_awesome_vimrc.sh }
@@ -76,10 +78,12 @@ def install_homebrew
   puts
   puts
   puts "======================================================"
-  puts "Installing Homebrew packages...There may be some warnings."
+  puts "Installing Homebrew packages and Cask"
   puts "======================================================"
-  run %{brew install zsh ctags git hub tmux reattach-to-user-namespace the_silver_searcher}
-  run %{brew install brew install macvim --env-std --override-system-vim }
+  run %{ brew install zsh git hub tmux reattach-to-user-namespace the_silver_searcher caskroom/cask/brew-cask }
+  run %{ brew install macvim --env-std --override-system-vim }
+  run %{ brew cask update }
+  run %{ brew cask install iterm2 }
   puts
   puts
 end
@@ -88,7 +92,7 @@ def install_fonts
   puts "======================================================"
   puts "Installing patched fonts for Powerline/Lightline."
   puts "======================================================"
-  run %{ cp -f $HOME/.yadr/fonts/* $HOME/Library/Fonts } if RUBY_PLATFORM.downcase.include?("darwin")
+  run %{ cp -f $PWD/fonts/* $HOME/Library/Fonts } if RUBY_PLATFORM.downcase.include?("darwin")
   run %{ mkdir -p ~/.fonts && cp ~/.yadr/fonts/* ~/.fonts && fc-cache -vf ~/.fonts } if RUBY_PLATFORM.downcase.include?("linux")
   puts
 end
@@ -161,7 +165,13 @@ def ask(message, values)
   values[selection]
 end
 
-def set_zsh_standard_shell
+def install_oh_my_zsh
+    puts "======================================================"
+    puts "Installing Oh my zsh and making zsh default shell"
+    puts "======================================================"
+
+    run %{ curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh }
+    run %{ git clone git://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins }
     puts "Setting zsh as your default shell"
     if File.exists?("/usr/local/bin/zsh")
       if File.readlines("/private/etc/shells").grep("/usr/local/bin/zsh").empty?
@@ -172,8 +182,8 @@ def set_zsh_standard_shell
     else
       run %{ chsh -s /bin/zsh }
     end
-  end
 end
+
 
 def want_to_install? (section)
   if ENV["ASK"]=="true"
